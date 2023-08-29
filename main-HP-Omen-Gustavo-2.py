@@ -145,43 +145,9 @@ def read_data():
     # Update the label with the data
     for row in result:
         data_label.config(
-            text=(
-                data_label.cget("text")
-                + f"{row[0]}, {row[1]}, {row[2]}, {row[3]}, {row[4]}, {row[5]}, {row[6]}, {row[7]}\n"
-            )
+            text=data_label.cget("text")
+            + "Name: {}, Age: {}\n".format(row[0], row[1], row[2])
         )
-
-
-"""
-### Delete Data ######
-def delete_data():
-    id = id_field.get()
-
-    conn = sqlite3.connect('data.db')
-    c = conn.cursor()
-
-    c.execute('DELETE FROM Student_Data WHERE id=?', (id,))
-    conn.commit()
-
-    conn.close()
-
-    # Clear the input field
-    id_field.delete(0, tk.END)
-
-# Create the GUI
-#window = tk.Tk()
-#window.title("Student Data")
-
-# Create the input fields and buttons
-id_label = tk.Label(window, text="ID:")
-id_label.pack()
-id_field = tk.Entry(window)
-id_field.pack()
-delete_button = tk.Button(window, text="Delete", command=delete_data)
-delete_button.pack()
-read_button = tk.Button(window, text="Read Data", command=read_data)
-read_button.pack()
-"""
 
 
 ##### main.py ######
@@ -320,6 +286,40 @@ frame_color_button = tk.Button(
     frame, text="Change Frame Color", command=change_frame_color
 )
 frame_color_button.grid(row=4, column=1, sticky="news", padx=20, pady=10)
+
+
+### Delete Data ######
+import tkinter as tk
+
+
+def delete_data():
+    first_name = first_name_field.get()
+
+    conn = sqlite3.connect("data.db")
+    c = conn.cursor()
+
+    c.execute("DELETE FROM Student_Data WHERE name LIKE ?", (first_name + "%",))
+    conn.commit()
+
+    conn.close()
+
+    # Clear the input field
+    first_name_field.delete(0, tk.END)
+
+
+# Create the GUI
+# window = tk.Tk()
+# window.title("Student Data")
+
+# Create the input fields and buttons
+# id_label = tk.Label(window, text="ID:")
+# id_label.pack()
+# id_field = tk.Entry(window)
+# id_field.pack()
+delete_button = tk.Button(frame, text="Delete", command=delete_data)
+delete_button.grid(row=2, column=1, sticky="news", padx=20, pady=10)
+# read_button = tk.Button(window, text="Read Data", command=read_data)
+# read_button.pack()
 
 
 ### age average ###

@@ -124,64 +124,52 @@ def enter_data(
         messagebox.showwarning(title="Error", message="Ud. NO acepto los Terminos")
 
 
-#### Read Data from DataBase ####
-import sqlite3
-import tkinter as tk
-
-
 def read_data():
+    # Create Table
     conn = sqlite3.connect("data.db")
-    c = conn.cursor()
+    table_create_query = """CREATE TABLE IF NOT EXISTS Student_Data 
+            (firstname TEXT, lastname TEXT, title TEXT, age INT, nationality TEXT, 
+            registration_status TEXT, num_courses INT, num_semesters INT)
+    """
+    conn.execute(table_create_query)
 
-    c.execute("SELECT * FROM Student_Data")
-    result = c.fetchall()
-
+    # Read Data
+    data_read_query = """SELECT * FROM Student_Data"""
+    cursor = conn.cursor()
+    cursor.execute(data_read_query)
+    rows = cursor.fetchall()
     conn.close()
 
-    # Create a new label to display the data
-    data_label = tk.Label(window, text="")
-    data_label.pack()
+    # Create new window for displaying data
+    read_window = tk.Toplevel()
+    read_window.title("Student Data")
+    read_window.resizable(True, True)
 
-    # Update the label with the data
-    for row in result:
-        data_label.config(
-            text=(
-                data_label.cget("text")
-                + f"{row[0]}, {row[1]}, {row[2]}, {row[3]}, {row[4]}, {row[5]}, {row[6]}, {row[7]}\n"
-            )
-        )
+    # Create table for displaying data
+    table = ttk.Treeview(read_window)
+    table["columns"] = (
+        "firstname",
+        "lastname",
+        "title",
+        "age",
+        "nationality",
+        "registration_status",
+        "num_courses",
+        "num_semesters",
+    )
+    table.heading("firstname", text="First Name")
+    table.heading("lastname", text="Last Name")
+    table.heading("title", text="Title")
+    table.heading("age", text="Age")
+    table.heading("nationality", text="Nationality")
+    table.heading("registration_status", text="Registration Status")
+    table.heading("num_courses", text="# Courses")
+    table.heading("num_semesters", text="# Semesters")
 
+    for row in rows:
+        table.insert("", "end", values=row)
 
-"""
-### Delete Data ######
-def delete_data():
-    id = id_field.get()
-
-    conn = sqlite3.connect('data.db')
-    c = conn.cursor()
-
-    c.execute('DELETE FROM Student_Data WHERE id=?', (id,))
-    conn.commit()
-
-    conn.close()
-
-    # Clear the input field
-    id_field.delete(0, tk.END)
-
-# Create the GUI
-#window = tk.Tk()
-#window.title("Student Data")
-
-# Create the input fields and buttons
-id_label = tk.Label(window, text="ID:")
-id_label.pack()
-id_field = tk.Entry(window)
-id_field.pack()
-delete_button = tk.Button(window, text="Delete", command=delete_data)
-delete_button.pack()
-read_button = tk.Button(window, text="Read Data", command=read_data)
-read_button.pack()
-"""
+    table.pack(fill="both", expand=True)
 
 
 ##### main.py ######
@@ -248,7 +236,7 @@ for widget in user_info_frame.winfo_children():
 courses_frame = tk.LabelFrame(frame)
 courses_frame.grid(row=1, column=0, sticky="news", padx=20, pady=10)
 
-registered_label = tk.Label(courses_frame, text="Registro de Cursos por Semestre")
+registered_label = tk.Label(courses_frame, text="Registracion")
 
 reg_status_var = tk.StringVar(value="No Registrado")
 registered_check = tk.Checkbutton(
@@ -323,7 +311,6 @@ frame_color_button.grid(row=4, column=1, sticky="news", padx=20, pady=10)
 
 
 ### age average ###
-"""
 import sqlite3
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -378,7 +365,7 @@ calculate_button = tk.Button(
 calculate_button.pack()
 show_button = tk.Button(window, text="Show Chart", command=show_age_average)
 show_button.pack()
-"""
+
 
 window.mainloop()
 
