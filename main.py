@@ -138,18 +138,84 @@ def read_data():
 
     conn.close()
 
-    # Create a new label to display the data
-    data_label = tk.Label(window, text="")
-    data_label.pack()
+    # Create a frame for the data grid
+    data_frame = tk.Frame(window)
+    data_frame.pack()
 
-    # Update the label with the data
-    for row in result:
-        data_label.config(
-            text=(
-                data_label.cget("text")
-                + f"{row[0]}, {row[1]}, {row[2]}, {row[3]}, {row[4]}, {row[5]}, {row[6]}, {row[7]}\n"
-            )
-        )
+    # Create labels for column headings
+    id_label = tk.Label(data_frame, text="Nombre")
+    id_label.grid(row=0, column=0)
+
+    name_label = tk.Label(data_frame, text="Apellido")
+    name_label.grid(row=0, column=1)
+    # Add more column heading labels
+    name_label = tk.Label(data_frame, text="Titulo")
+    name_label.grid(row=0, column=2)
+
+    name_label = tk.Label(data_frame, text="Edad")
+    name_label.grid(row=0, column=3)
+
+    name_label = tk.Label(data_frame, text="Nacionalidad")
+    name_label.grid(row=0, column=4)
+
+    name_label = tk.Label(data_frame, text="Estado")
+    name_label.grid(row=0, column=5)
+
+    name_label = tk.Label(data_frame, text="# Cursos")
+    name_label.grid(row=0, column=6)
+
+    name_label = tk.Label(data_frame, text="# Semestre")
+    name_label.grid(row=0, column=7)
+
+    # Loop through data and add to grid
+    for i, row in enumerate(result):
+        id_val = tk.Label(data_frame, text=row[0])
+        id_val.grid(row=i + 1, column=0)
+
+        name_val = tk.Label(data_frame, text=row[1])
+        name_val.grid(row=i + 1, column=1)
+
+        # Add more data labels to the grid
+        name_val = tk.Label(data_frame, text=row[2])
+        name_val.grid(row=i + 1, column=2)
+
+        name_val = tk.Label(data_frame, text=row[3])
+        name_val.grid(row=i + 1, column=3)
+
+        name_val = tk.Label(data_frame, text=row[4])
+        name_val.grid(row=i + 1, column=4)
+
+        name_val = tk.Label(data_frame, text=row[5])
+        name_val.grid(row=i + 1, column=5)
+
+        name_val = tk.Label(data_frame, text=row[6])
+        name_val.grid(row=i + 1, column=6)
+
+        name_val = tk.Label(data_frame, text=row[7])
+        name_val.grid(row=i + 1, column=7)
+
+    # Configure column widths
+    data_frame.grid_columnconfigure(0, minsize=50)
+    data_frame.grid_columnconfigure(1, minsize=100)
+
+    # Add border to window
+    window.config(relief="sunken", bd=2)
+
+    # Add border to frames
+    data_frame.config(relief="sunken", bd=2)
+    # headings_frame is not defined, so comment out this line
+    # headings_frame.config(relief="sunken", bd=2)
+
+    # Add borders to labels
+    id_label.config(relief="sunken", bd=2)
+    name_label.config(relief="sunken", bd=2)
+    name_label = tk.Label(data_frame, text="Apellido", relief="sunken")
+    name_label.grid(row=0, column=1)
+
+    # Add borders to separators
+    for sep in data_frame.grid_slaves():
+        if isinstance(sep, ttk.Separator):
+            sep.config(relief="sunken", bd=2)
 
 
 """
