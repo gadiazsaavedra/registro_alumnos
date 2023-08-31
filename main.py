@@ -218,6 +218,9 @@ def read_data():
             sep.config(relief="sunken", bd=2)
 
 
+
+
+
 """
 ### Delete Data ######
 def delete_data():
@@ -386,6 +389,101 @@ frame_color_button = tk.Button(
     frame, text="Change Frame Color", command=change_frame_color
 )
 frame_color_button.grid(row=4, column=1, sticky="news", padx=20, pady=10)
+
+
+# function to find a student
+
+import tkinter as tk
+from tkinter import messagebox
+import sqlite3
+from tkinter import ttk
+
+# Create the root window
+root = tk.Tk()
+# Create a frame for the data grid
+data_frame = tk.Frame(window)
+data_frame.pack()
+# ...
+
+
+def find_student_by_name(name):
+    conn = sqlite3.connect("data.db")
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM Student_Data WHERE firstname LIKE ?", (f"{name}%",))
+    result = c.fetchall()
+
+    conn.close()
+
+    return result
+
+
+def handle_find_button():
+    if name := name_entry.get():
+        if result := find_student_by_name(name):
+            _extracted_from_handle_find_button_5(result)
+        else:
+            messagebox.showinfo(
+                "Student Not Found", f"No student found with name '{name}'"
+            )
+    else:
+        messagebox.showwarning("Invalid Input", "Please enter a name to search for")
+
+
+# TODO Rename this here and in `handle_find_button`
+def _extracted_from_handle_find_button_5(result):
+    # Clear previous search results (if any)
+    for child in data_frame.winfo_children():
+        child.destroy()
+
+    # Highlight the data_frame
+    data_frame.configure(bg="yellow")
+
+    # Create table for displaying results
+    table = ttk.Treeview(data_frame)
+    table["columns"] = (
+        "firstname",
+        "lastname",
+        "title",
+        "age",
+        "nationality",
+        "registration_status",
+        "num_courses",
+        "num_semesters",
+    )
+    table.heading("firstname", text="First Name")
+    table.heading("lastname", text="Last Name")
+    table.heading("title", text="Title")
+    table.heading("age", text="Age")
+    table.heading("nationality", text="Nationality")
+    table.heading("registration_status", text="Registration Status")
+    table.heading("num_courses", text="# Courses")
+    table.heading("num_semesters", text="# Semesters")
+
+    for row in result:
+        table.insert("", "end", values=row)
+
+    table.pack(fill="both", expand=True)
+
+
+
+# Create a frame inside the root window for the search results
+result_frame = tk.Frame(root)
+result_frame.pack()
+
+# Create the "Enter Data" button
+#enter_data_button = tk.Button(result_frame, text="Enter Data")
+#enter_data_button.pack(side=tk.TOP)
+
+# Create the name entry widget
+name_entry = tk.Entry(frame)
+name_entry.grid(row=5, column=0, sticky="news", padx=30, pady=10)
+
+# Create the "Find" button
+find_button = tk.Button(frame, text="Find", command=handle_find_button)
+find_button.grid(row=5, column=1, sticky="news", padx=20, pady=10)
+
+
 
 
 ### age average ###
